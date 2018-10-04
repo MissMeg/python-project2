@@ -1,41 +1,46 @@
 import csv
+import os
+
+
+def setup_teams(team, sharks, dragons, raptors, counter):
+    for kid in team:
+        if counter == 1:
+            sharks.append(kid)
+            counter += 1
+        elif counter == 2:
+            dragons.append(kid)
+            counter += 1
+        elif counter == 3:
+            raptors.append(kid)
+            counter = 1
+
+
+def print_teams(team, team_name):
+    # create new folder for output = easier cleanup
+    os.makedirs(os.path.dirname('output/teams.txt'), exist_ok=True)
+    with open('output/teams.txt', 'a') as teamsfile:
+        teamsfile.write('{}\n'.format(team_name))
+        for kid in team:
+            teamsfile.write('{}, {}, {}, {}\n'.format(kid['Name'], kid['Height (inches)'], kid['Soccer Experience'], kid['Guardian Name(s)']))
+        # add a space before the next team for easier readability
+        teamsfile.write('\n')
+
+
+def welcome_letter(team, team_name):
+    for kid in team:
+        # create file names with firstname_lastname of the kid
+        kid_file_name = '_'.join(kid['Name'].lower().split())
+        # create new folder for output = easier cleanup
+        os.makedirs(os.path.dirname('output/{}.txt'.format(kid_file_name)), exist_ok=True)
+        with open('output/{}.txt'.format(kid_file_name), 'a') as kidfile:
+            kidfile.write('Dear {},\n'.format(kid['Guardian Name(s)']))
+            kidfile.write("Welcome to the soccer season! Here is your child's information:\n")
+            kidfile.write('Soccer Player: {}\n'.format(kid['Name']))
+            kidfile.write('Team: {}\n'.format(team_name))
+            kidfile.write('First Practice: Oct. 5th at 5pm')
 
 
 if __name__ == '__main__':
-    def setup_teams(team, sharks, dragons, raptors, counter):
-        for kid in team:
-            if counter == 1:
-                sharks.append(kid)
-                counter += 1
-            elif counter == 2:
-                dragons.append(kid)
-                counter += 1
-            elif counter == 3:
-                raptors.append(kid)
-                counter = 1
-
-
-    def print_teams(team, team_name):
-        with open('teams.txt', 'a') as teamsfile:
-            teamsfile.write('{}\n'.format(team_name))
-            for kid in team:
-                teamsfile.write('{}, {}, {}, {}\n'.format(kid['Name'], kid['Height (inches)'], kid['Soccer Experience'], kid['Guardian Name(s)']))
-            # add a space before the next team for easier readability
-            teamsfile.write('\n')
-
-
-    def welcome_letter(team, team_name):
-        for kid in team:
-            # create file names with firstname_lastname of the kid
-            kid_file_name = '_'.join(kid['Name'].lower().split())
-            with open('{}.txt'.format(kid_file_name), 'a') as kidfile:
-                kidfile.write('Dear {},\n'.format(kid['Guardian Name(s)']))
-                kidfile.write("Welcome to the soccer season! Here is your child's information:\n")
-                kidfile.write('Soccer Player: {}\n'.format(kid['Name']))
-                kidfile.write('Team: {}\n'.format(team_name))
-                kidfile.write('First Practice: Oct. 5th at 5pm')
-
-
     # Open the csv of soccer players
     with open('soccer_players.csv') as csvfile:
         # Read the csv file as a dictionary
